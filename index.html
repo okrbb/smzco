@@ -36,8 +36,8 @@
 </head>
 <body class="bg-brand-bgLight text-stone-900 dark:bg-brand-bgDark dark:text-stone-100 min-h-screen flex flex-col antialiased">
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-stone-200 dark:border-zinc-800 shadow-sm transition-all">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-3 sm:gap-4 md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-4">
+            <div class="order-1 flex items-center gap-3 shrink-0">
                 <div class="site-logo p-2.5 rounded-2xl shadow-md shadow-amber-500/10">
                 </div>
                 <div>
@@ -48,10 +48,22 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 sm:gap-4">
-                <div class="flex items-center gap-2 px-3.5 py-1.5 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-full">
-                    <span class="w-2.5 h-2.5 bg-red-600 rounded-full live-dot"></span>
-                    <span class="text-xs font-black text-red-600 dark:text-red-400 tracking-wider">LIVE REBRÍČEK</span>
+            <div class="order-3 w-full flex flex-col gap-2 sm:flex-row sm:items-center md:order-2 md:w-auto md:justify-self-center">
+                <div class="relative w-full sm:flex-1 md:flex-none md:w-[360px] lg:w-[440px] xl:w-[520px]">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-stone-400"></i>
+                    <input id="teamSearchInput" type="text" placeholder="Hľadaj školu, družstvo alebo štartové číslo" class="w-full pl-9 pr-3 py-2.5 text-sm rounded-2xl border border-stone-200 dark:border-zinc-700 bg-stone-50 dark:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-amber-400/50" />
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button id="filterAllBtn" data-filter="all" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-white">Všetky</button>
+                    <button id="filterOnTrackBtn" data-filter="onTrack" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-100 dark:bg-zinc-800 text-stone-700 dark:text-zinc-300">Iba na trati</button>
+                    <button id="filterFinishedBtn" data-filter="finished" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-100 dark:bg-zinc-800 text-stone-700 dark:text-zinc-300">V cieli</button>
+                </div>
+            </div>
+
+            <div class="order-2 md:order-3 flex items-center gap-3 sm:gap-4 ml-auto md:ml-0 md:justify-self-end shrink-0">
+                <div id="liveStatusBadge" class="flex items-center gap-2 px-3.5 py-1.5 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-full transition-colors">
+                    <span id="liveStatusDot" class="w-2.5 h-2.5 bg-red-600 rounded-full live-dot"></span>
+                    <span id="liveStatusText" class="text-xs font-black text-red-600 dark:text-red-400 tracking-wider">LIVE REBRÍČEK</span>
                 </div>
 
                 <button onclick="toggleTheme()" class="p-2.5 hover:bg-stone-100 dark:hover:bg-zinc-800 rounded-full transition-all text-stone-600 dark:text-stone-300" title="Prepnúť režim">
@@ -135,13 +147,13 @@
                             <th class="py-4 px-6 min-w-[220px]">Názov školy / družstva</th>
                             <th class="py-4 px-4 text-center">Stav</th>
                             <th class="py-4 px-4 text-center">Testy <span class="text-[10px] font-normal block">max 320</span></th>
-                            <th class="py-4 px-4 text-center">Zdravotná <span class="text-[10px] font-normal block">max 120</span></th>
-                            <th class="py-4 px-4 text-center">Hasenie <span class="text-[10px] font-normal block">max 50</span></th>
-                            <th class="py-4 px-4 text-center">CO <span class="text-[10px] font-normal block">max 340</span></th>
-                            <th class="py-4 px-4 text-center">Pohyb <span class="text-[10px] font-normal block">max 50</span></th>
-                            <th class="py-4 px-4 text-center">Streľba <span class="text-[10px] font-normal block">max 120</span></th>
-                            <th class="py-4 px-4 text-center">Čas v cieli</th>
-                            <th class="py-4 px-4 text-center">Penal.</th>
+                            <th class="py-4 px-4 text-center whitespace-normal leading-tight w-24">Zdravotnícka príprava <span class="text-[10px] font-normal block">max 120</span></th>
+                            <th class="py-4 px-4 text-center whitespace-normal leading-tight w-24">Hasenie malých požiarov<span class="text-[10px] font-normal block">max 50</span></th>
+                            <th class="py-4 px-4 text-center whitespace-normal leading-tight w-24">Civilná ochrana <span class="text-[10px] font-normal block">max 340</span></th>
+                            <th class="py-4 px-4 text-center whitespace-normal leading-tight w-24">Pohyb v prírode<span class="text-[10px] font-normal block">max 50</span></th>
+                            <th class="py-4 px-4 text-center">Streľba<span class="text-[10px] font-normal block">max 120</span></th>
+                            <th class="py-4 px-4 text-center">Bežecký čas</th>
+                            <th class="py-4 px-4 text-center whitespace-normal leading-tight w-24">Trestné body</th>
                             <th class="py-4 px-6 text-center bg-stone-100/50 dark:bg-zinc-800/30 font-black text-stone-800 dark:text-stone-200 w-28">Spolu</th>
                         </tr>
                     </thead>
@@ -150,8 +162,8 @@
             </div>
             <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-stone-400">
                 <i data-lucide="inbox" class="w-16 h-16 mb-4 opacity-40"></i>
-                <p class="text-lg font-bold">Žiadne družstvá nenačítané</p>
-                <p class="text-sm">Skontrolujte pripojenie k databáze.</p>
+                <p id="emptyStateTitle" class="text-lg font-bold">Žiadne družstvá nenačítané</p>
+                <p id="emptyStateHint" class="text-sm">Skontrolujte pripojenie k databáze.</p>
             </div>
         </div>
 

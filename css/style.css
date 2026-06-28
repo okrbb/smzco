@@ -32,6 +32,48 @@ body {
 
 .team-row {
     transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+}
+
+.team-card {
+    will-change: transform;
+}
+
+.skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: #E6D8CE;
+}
+
+.dark .skeleton-shimmer {
+    background-color: #3E3830;
+}
+
+.skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.55) 45%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: skeleton-shimmer 1.3s ease-in-out infinite;
+}
+
+.dark .skeleton-shimmer::after {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.15) 45%,
+        rgba(255, 255, 255, 0) 100%
+    );
+}
+
+@keyframes skeleton-shimmer {
+    100% { transform: translateX(100%); }
 }
 
 .site-logo {
