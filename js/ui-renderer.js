@@ -99,15 +99,15 @@ function animateItemReorder(containerSelector, itemSelector, firstRects) {
 
 function getRankDisplay(index) {
     if (index === 0) {
-        return '<div class="inline-flex items-center justify-center bg-amber-500 text-white w-9 h-9 rounded-full font-black shadow-lg shadow-amber-500/20"><i data-lucide="crown" class="w-5 h-5"></i></div>';
+        return '<div class="inline-flex items-center justify-center bg-amber-500 text-white w-9 h-9 rounded-lg font-black shadow-sm"><i data-lucide="crown" class="w-5 h-5"></i></div>';
     }
     if (index === 1) {
-        return '<div class="inline-flex items-center justify-center bg-stone-300 text-stone-800 w-8 h-8 rounded-full font-black">2</div>';
+        return '<div class="inline-flex items-center justify-center bg-blue-100 text-blue-800 w-8 h-8 rounded-lg font-black">2</div>';
     }
     if (index === 2) {
-        return '<div class="inline-flex items-center justify-center bg-amber-700 text-white w-8 h-8 rounded-full font-black">3</div>';
+        return '<div class="inline-flex items-center justify-center bg-amber-100 text-amber-800 w-8 h-8 rounded-lg font-black">3</div>';
     }
-    return `<span class="text-lg font-bold">${index + 1}.</span>`;
+    return `<span class="text-base font-display font-bold text-slate-500 dark:text-zinc-400">${index + 1}.</span>`;
 }
 
 function getStatusChip(team) {
@@ -115,19 +115,19 @@ function getStatusChip(team) {
     const isOnTrack = team.status === "Na trati" || team.status === "ON_TRACK";
 
     if (isFinished) {
-        return '<span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">V cieli</span>';
+        return '<span class="px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide rounded-md bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">V cieli</span>';
     }
     if (isOnTrack) {
-        return '<span class="px-3 py-1 text-xs font-bold rounded-full bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-400 animate-pulse">Na trati</span>';
+        return '<span class="px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide rounded-md bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 animate-pulse">Na trati</span>';
     }
-    return '<span class="px-3 py-1 text-xs font-bold rounded-full bg-stone-100 text-stone-500 dark:bg-zinc-800 dark:text-zinc-400">Pripravený</span>';
+    return '<span class="px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide rounded-md bg-slate-100 text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">Pripravený</span>';
 }
 
 function getMobileBadgeColor(index) {
     if (index === 0) return "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300";
-    if (index === 1) return "bg-stone-200 text-stone-700 dark:bg-zinc-700 dark:text-zinc-300";
+    if (index === 1) return "bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300";
     if (index === 2) return "bg-amber-100 text-amber-900 dark:bg-amber-900/30 dark:text-amber-400";
-    return "bg-stone-100 text-stone-500 dark:bg-zinc-800";
+    return "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300";
 }
 
 function normalizeForSearch(value) {
@@ -194,23 +194,23 @@ function getRenderSignature(team, index, scores) {
 
 function buildDesktopRowHtml(team, index, prev, scores, signature) {
     return `
-        <tr id="team-row-${team.startNum}" data-team-id="${team.startNum}" data-signature="${signature}" class="team-row hover:bg-stone-50/50 dark:hover:bg-zinc-800/30 transition-colors cursor-pointer" onclick="showTeamDetail(${team.startNum})">
-            <td class="py-4 px-6 text-center">${getRankDisplay(index)}</td>
-            <td class="py-4 px-3 text-center text-stone-400 font-bold">#${team.startNum}</td>
-            <td class="py-4 px-6">
-                <p class="font-bold text-stone-800 dark:text-white text-base leading-tight">${team.name}</p>
+        <tr id="team-row-${team.startNum}" data-team-id="${team.startNum}" data-signature="${signature}" class="team-row group hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors cursor-pointer" onclick="showTeamDetail(${team.startNum})">
+            <td class="py-3.5 px-6 text-center">${getRankDisplay(index)}</td>
+            <td class="py-3.5 px-3 text-center text-slate-400 dark:text-zinc-500 font-semibold">#${team.startNum}</td>
+            <td class="py-3.5 px-6">
+                <p class="font-display font-bold text-navy-900 dark:text-white text-[15px] leading-tight">${team.name}</p>
                 ${getStationProgressHtml(team)}
             </td>
-            <td class="py-4 px-4 text-center">${getStatusChip(team)}</td>
-            <td class="py-4 px-4 text-center font-semibold ${checkPulse(scores.testy, prev.testy)}">${scores.testy}</td>
-            <td class="py-4 px-4 text-center font-semibold ${checkPulse(scores.zdravie, prev.zdravie)}">${scores.zdravie}</td>
-            <td class="py-4 px-4 text-center font-semibold ${checkPulse(scores.hasenie, prev.hasenie)}">${scores.hasenie}</td>
-            <td class="py-4 px-4 text-center font-semibold ${checkPulse(scores.co, prev.co)}">${scores.co}</td>
-            <td class="py-4 px-4 text-center font-semibold ${checkPulse(scores.pohyb, prev.pohyb)}">${scores.pohyb}</td>
-            <td class="py-4 px-4 text-center font-semibold ${checkPulse(scores.strelba, prev.strelba)}">${scores.strelba}</td>
-            <td class="py-4 px-4 text-center font-mono text-sm">${getPureTimeFormatted(team)}</td>
-            <td class="py-4 px-4 text-center text-red-500 font-bold ${checkPulse(scores.penalty, prev.penalty)}">${scores.penalty > 0 ? `-${scores.penalty} b.` : "0"}</td>
-            <td class="py-4 px-6 text-center font-black bg-stone-50 dark:bg-zinc-800/20 text-lg text-amber-600 dark:text-amber-400 ${checkPulse(scores.total, prev.total)}">${scores.total} b.</td>
+            <td class="py-3.5 px-4 text-center">${getStatusChip(team)}</td>
+            <td class="py-3.5 px-4 text-center font-semibold text-slate-700 dark:text-zinc-200 ${checkPulse(scores.testy, prev.testy)}">${scores.testy}</td>
+            <td class="py-3.5 px-4 text-center font-semibold text-slate-700 dark:text-zinc-200 ${checkPulse(scores.zdravie, prev.zdravie)}">${scores.zdravie}</td>
+            <td class="py-3.5 px-4 text-center font-semibold text-slate-700 dark:text-zinc-200 ${checkPulse(scores.hasenie, prev.hasenie)}">${scores.hasenie}</td>
+            <td class="py-3.5 px-4 text-center font-semibold text-slate-700 dark:text-zinc-200 ${checkPulse(scores.co, prev.co)}">${scores.co}</td>
+            <td class="py-3.5 px-4 text-center font-semibold text-slate-700 dark:text-zinc-200 ${checkPulse(scores.pohyb, prev.pohyb)}">${scores.pohyb}</td>
+            <td class="py-3.5 px-4 text-center font-semibold text-slate-700 dark:text-zinc-200 ${checkPulse(scores.strelba, prev.strelba)}">${scores.strelba}</td>
+            <td class="py-3.5 px-4 text-center font-mono text-sm text-slate-700 dark:text-zinc-200">${getPureTimeFormatted(team)}</td>
+            <td class="py-3.5 px-4 text-center text-red-500 font-semibold ${checkPulse(scores.penalty, prev.penalty)}">${scores.penalty > 0 ? `-${scores.penalty} b.` : "0"}</td>
+            <td class="py-3.5 px-6 text-center font-display font-bold bg-blue-50/70 dark:bg-zinc-800/20 group-hover:bg-blue-100/70 dark:group-hover:bg-zinc-700/40 text-lg text-navy-900 dark:text-amber-300 ${checkPulse(scores.total, prev.total)}">${scores.total} b.</td>
         </tr>
     `;
 }
@@ -230,34 +230,34 @@ function buildMobileCardHtml(team, index, scores, signature) {
                 </div>
                 <div class="text-right">
                     <span class="text-lg font-black text-amber-600 dark:text-amber-400 block">${scores.total} b.</span>
-                    <span class="text-[10px] text-stone-400 block uppercase font-bold">Zobraziť</span>
+                    <span class="text-[10px] text-blue-700 dark:text-blue-300 block uppercase font-bold">Zobraziť</span>
                 </div>
             </div>
             <div id="acc-${team.startNum}" class="hidden mt-4 pt-4 border-t border-stone-100 dark:border-zinc-800 space-y-2.5">
                 <div class="grid grid-cols-2 gap-2 text-xs">
-                    <div class="bg-stone-50 dark:bg-zinc-800/40 p-2.5 rounded-xl">
-                        <span class="text-[10px] text-stone-400 font-bold block uppercase">1. Testy</span>
-                        <span class="font-black text-stone-700 dark:text-stone-300">${scores.testy} / 320 b.</span>
+                    <div class="bg-blue-50/80 dark:bg-blue-950/20 p-2.5 rounded-xl border border-blue-100 dark:border-blue-900/40">
+                        <span class="text-[10px] text-blue-700 dark:text-blue-300 font-bold block uppercase">1. Testy</span>
+                        <span class="font-black text-slate-700 dark:text-slate-200">${scores.testy} / 320 b.</span>
                     </div>
-                    <div class="bg-stone-50 dark:bg-zinc-800/40 p-2.5 rounded-xl">
-                        <span class="text-[10px] text-stone-400 font-bold block uppercase">2. Zdravotná</span>
-                        <span class="font-black text-stone-700 dark:text-stone-300">${scores.zdravie} / 120 b.</span>
+                    <div class="bg-blue-50/80 dark:bg-blue-950/20 p-2.5 rounded-xl border border-blue-100 dark:border-blue-900/40">
+                        <span class="text-[10px] text-blue-700 dark:text-blue-300 font-bold block uppercase">2. Zdravotná</span>
+                        <span class="font-black text-slate-700 dark:text-slate-200">${scores.zdravie} / 120 b.</span>
                     </div>
-                    <div class="bg-stone-50 dark:bg-zinc-800/40 p-2.5 rounded-xl">
-                        <span class="text-[10px] text-stone-400 font-bold block uppercase">3. Hasenie</span>
-                        <span class="font-black text-stone-700 dark:text-stone-300">${scores.hasenie} / 50 b.</span>
+                    <div class="bg-amber-50/80 dark:bg-amber-950/20 p-2.5 rounded-xl border border-amber-100 dark:border-amber-900/40">
+                        <span class="text-[10px] text-amber-700 dark:text-amber-300 font-bold block uppercase">3. Hasenie</span>
+                        <span class="font-black text-slate-700 dark:text-slate-200">${scores.hasenie} / 50 b.</span>
                     </div>
-                    <div class="bg-stone-50 dark:bg-zinc-800/40 p-2.5 rounded-xl">
-                        <span class="text-[10px] text-stone-400 font-bold block uppercase">4. Civilná ochr.</span>
-                        <span class="font-black text-stone-700 dark:text-stone-300">${scores.co} / 340 b.</span>
+                    <div class="bg-blue-50/80 dark:bg-blue-950/20 p-2.5 rounded-xl border border-blue-100 dark:border-blue-900/40">
+                        <span class="text-[10px] text-blue-700 dark:text-blue-300 font-bold block uppercase">4. Civilná ochr.</span>
+                        <span class="font-black text-slate-700 dark:text-slate-200">${scores.co} / 340 b.</span>
                     </div>
-                    <div class="bg-stone-50 dark:bg-zinc-800/40 p-2.5 rounded-xl">
-                        <span class="text-[10px] text-stone-400 font-bold block uppercase">5. Pohyb</span>
-                        <span class="font-black text-stone-700 dark:text-stone-300">${scores.pohyb} / 50 b.</span>
+                    <div class="bg-blue-50/80 dark:bg-blue-950/20 p-2.5 rounded-xl border border-blue-100 dark:border-blue-900/40">
+                        <span class="text-[10px] text-blue-700 dark:text-blue-300 font-bold block uppercase">5. Pohyb</span>
+                        <span class="font-black text-slate-700 dark:text-slate-200">${scores.pohyb} / 50 b.</span>
                     </div>
-                    <div class="bg-stone-50 dark:bg-zinc-800/40 p-2.5 rounded-xl">
-                        <span class="text-[10px] text-stone-400 font-bold block uppercase">6. Streľba</span>
-                        <span class="font-black text-stone-700 dark:text-stone-300">${scores.strelba} / 120 b.</span>
+                    <div class="bg-amber-50/80 dark:bg-amber-950/20 p-2.5 rounded-xl border border-amber-100 dark:border-amber-900/40">
+                        <span class="text-[10px] text-amber-700 dark:text-amber-300 font-bold block uppercase">6. Streľba</span>
+                        <span class="font-black text-slate-700 dark:text-slate-200">${scores.strelba} / 120 b.</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-between p-2.5 bg-amber-50 dark:bg-amber-950/20 rounded-xl text-xs">
@@ -330,7 +330,7 @@ export function setConnectionStatus(status) {
         statusText.innerText = "LIVE REBRÍČEK";
         statusText.className = "text-xs font-black text-emerald-600 dark:text-emerald-400 tracking-wider";
         statusDot.className = "w-2.5 h-2.5 bg-emerald-600 rounded-full live-dot";
-        statusBadge.className = "flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 rounded-full transition-colors";
+        statusBadge.className = "flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 rounded-lg transition-colors";
         return;
     }
 
@@ -338,24 +338,24 @@ export function setConnectionStatus(status) {
         statusText.innerText = "LIVE REBRÍČEK";
         statusText.className = "text-xs font-black text-red-600 dark:text-red-400 tracking-wider";
         statusDot.className = "w-2.5 h-2.5 bg-red-600 rounded-full live-dot";
-        statusBadge.className = "flex items-center gap-2 px-3.5 py-1.5 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-full transition-colors";
+        statusBadge.className = "flex items-center gap-2 px-3 py-1.5 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 rounded-lg transition-colors";
         return;
     }
 
     statusText.innerText = "LIVE REBRÍČEK";
     statusText.className = "text-xs font-black text-amber-600 dark:text-amber-400 tracking-wider";
     statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
-    statusBadge.className = "flex items-center gap-2 px-3.5 py-1.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-full transition-colors";
+    statusBadge.className = "flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 rounded-lg transition-colors";
 }
 
 export function updateFilterButtonsUI(activeStatus) {
     document.querySelectorAll("button[data-filter]").forEach((button) => {
         const isActive = button.dataset.filter === activeStatus;
         if (isActive) {
-            button.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-white";
+            button.className = "px-3 py-1.5 rounded-md text-[11px] font-bold bg-white text-navy-900 dark:bg-zinc-700 dark:text-zinc-100 whitespace-nowrap shadow-sm";
             return;
         }
-        button.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-100 dark:bg-zinc-800 text-stone-700 dark:text-zinc-300";
+        button.className = "px-3 py-1.5 rounded-md text-[11px] font-semibold text-slate-600 dark:text-zinc-300 whitespace-nowrap";
     });
 }
 
@@ -469,173 +469,182 @@ export function showTeamDetail(startNum, state) {
     const scores = getScoreSnapshot(team, state.limitMin);
     const total = calculateTotalPoints(team, state.limitMin);
     const penalty = calculatePenalty(team, state.limitMin);
-    const base = calculateAllStationsPoints(team);
     const startTime = formatClockTime(team.startTimeMillis);
     const finishTime = formatClockTime(team.cielTimeMillis);
     const runTime = getPureTimeFormatted(team);
+    const delaySeconds = Math.max(0, Math.floor((Number(team.zdrznyCasMillis) || 0) / 1000));
+    const delayMinutes = Math.floor(delaySeconds / 60);
+    const delayRemainderSeconds = delaySeconds % 60;
+    const delayTime = `${String(delayMinutes).padStart(2, "0")}:${String(delayRemainderSeconds).padStart(2, "0")}`;
+    const stationMax = {
+        testy: 320,
+        zdravie: 120,
+        hasenie: 50,
+        co: 340,
+        pohyb: 50,
+        strelba: 120
+    };
 
-    document.getElementById("modalTeamNum").innerText = `Št. č. ${team.startNum}`;
+    const progressPercent = (value, max) => {
+        const numericValue = Number(value || 0);
+        if (!Number.isFinite(numericValue) || max <= 0) return 0;
+        return Math.max(0, Math.min(100, Math.round((numericValue / max) * 100)));
+    };
+
+    document.getElementById("modalTeamNum").innerText = `Detail tímu • Štartové číslo ${team.startNum}`;
     document.getElementById("modalTeamName").innerText = team.name;
-    document.getElementById("modalSumBase").innerText = `${base} b.`;
-    document.getElementById("modalSumPenalty").innerText = `-${penalty} b.`;
-    document.getElementById("modalSumTotal").innerText = `${total} b.`;
 
     const grid = document.getElementById("modalDetailsGrid");
     grid.innerHTML = `
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-stone-700 dark:text-stone-200 flex items-center gap-2">
-                    <i data-lucide="layout-grid" class="w-4 h-4"></i> Sumár disciplín
-                </span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div class="lg:col-span-4 bg-navy-900 dark:bg-blue-950 rounded-xl p-6 text-white flex flex-col justify-between shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i data-lucide="award" class="w-24 h-24"></i>
+                </div>
+                <div>
+                    <p class="text-blue-100 text-sm font-medium">Celkový výsledok</p>
+                    <p class="text-5xl font-display font-bold tabular-data mt-2">${total} <span class="text-xl text-blue-200 font-medium">b.</span></p>
+                </div>
+                <div class="mt-8 grid grid-cols-2 gap-4 border-t border-white/20 pt-4">
+                    <div>
+                        <p class="text-[10px] uppercase text-blue-200 tracking-wider">Bežecký čas</p>
+                        <p class="font-mono font-medium mt-1">${runTime}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase text-blue-200 tracking-wider">Penalizácia</p>
+                        <p class="font-mono font-medium mt-1 text-amber-300">-${penalty} b.</p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-between gap-2">
-                    <span class="font-semibold text-stone-600 dark:text-stone-300 flex items-center gap-1.5"><i data-lucide="file-text" class="w-3.5 h-3.5 text-amber-600"></i> Testy</span>
-                    <span class="font-black">${scores.testy} / 320</span>
+
+            <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div class="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm hover:border-blue-200 dark:hover:border-blue-700 transition-colors">
+                    <div class="flex items-center gap-2 text-blue-700 dark:text-blue-300 mb-3">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider">Testy</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl font-display font-bold text-navy-900 dark:text-white tabular-data">${scores.testy}</span>
+                        <span class="text-xs text-slate-400 dark:text-zinc-400 font-medium mb-1">/ ${stationMax.testy}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-zinc-700 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-blue-600 h-full rounded-full" style="width:${progressPercent(scores.testy, stationMax.testy)}%;"></div>
+                    </div>
                 </div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-between gap-2">
-                    <span class="font-semibold text-stone-600 dark:text-stone-300 flex items-center gap-1.5"><i data-lucide="heart-pulse" class="w-3.5 h-3.5 text-red-500"></i> Zdravotnícka</span>
-                    <span class="font-black">${scores.zdravie} / 120</span>
+
+                <div class="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm hover:border-blue-200 dark:hover:border-blue-700 transition-colors">
+                    <div class="flex items-center gap-2 text-blue-700 dark:text-blue-300 mb-3">
+                        <i data-lucide="heart-pulse" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider">Zdravie</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl font-display font-bold text-navy-900 dark:text-white tabular-data">${scores.zdravie}</span>
+                        <span class="text-xs text-slate-400 dark:text-zinc-400 font-medium mb-1">/ ${stationMax.zdravie}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-zinc-700 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-blue-600 h-full rounded-full" style="width:${progressPercent(scores.zdravie, stationMax.zdravie)}%;"></div>
+                    </div>
                 </div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-between gap-2">
-                    <span class="font-semibold text-stone-600 dark:text-stone-300 flex items-center gap-1.5"><i data-lucide="flame" class="w-3.5 h-3.5 text-orange-500"></i> Hasenie</span>
-                    <span class="font-black">${scores.hasenie} / 50</span>
+
+                <div class="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm hover:border-amber-200 dark:hover:border-amber-700 transition-colors">
+                    <div class="flex items-center gap-2 text-amber-600 dark:text-amber-300 mb-3">
+                        <i data-lucide="flame" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider">Hasenie</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl font-display font-bold text-navy-900 dark:text-white tabular-data">${scores.hasenie}</span>
+                        <span class="text-xs text-slate-400 dark:text-zinc-400 font-medium mb-1">/ ${stationMax.hasenie}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-zinc-700 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-amber-500 h-full rounded-full" style="width:${progressPercent(scores.hasenie, stationMax.hasenie)}%;"></div>
+                    </div>
                 </div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-between gap-2">
-                    <span class="font-semibold text-stone-600 dark:text-stone-300 flex items-center gap-1.5"><i data-lucide="shield" class="w-3.5 h-3.5 text-blue-500"></i> Civilná ochr.</span>
-                    <span class="font-black">${scores.co} / 340</span>
+
+                <div class="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm hover:border-blue-200 dark:hover:border-blue-700 transition-colors">
+                    <div class="flex items-center gap-2 text-blue-700 dark:text-blue-300 mb-3">
+                        <i data-lucide="shield" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider">Civilná ochr.</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl font-display font-bold text-navy-900 dark:text-white tabular-data">${scores.co}</span>
+                        <span class="text-xs text-slate-400 dark:text-zinc-400 font-medium mb-1">/ ${stationMax.co}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-zinc-700 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-blue-600 h-full rounded-full" style="width:${progressPercent(scores.co, stationMax.co)}%;"></div>
+                    </div>
                 </div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-between gap-2">
-                    <span class="font-semibold text-stone-600 dark:text-stone-300 flex items-center gap-1.5"><i data-lucide="compass" class="w-3.5 h-3.5 text-emerald-500"></i> Pohyb</span>
-                    <span class="font-black">${scores.pohyb} / 50</span>
+
+                <div class="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm hover:border-blue-200 dark:hover:border-blue-700 transition-colors">
+                    <div class="flex items-center gap-2 text-blue-700 dark:text-blue-300 mb-3">
+                        <i data-lucide="compass" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider">Pohyb</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl font-display font-bold text-navy-900 dark:text-white tabular-data">${scores.pohyb}</span>
+                        <span class="text-xs text-slate-400 dark:text-zinc-400 font-medium mb-1">/ ${stationMax.pohyb}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-zinc-700 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-blue-600 h-full rounded-full" style="width:${progressPercent(scores.pohyb, stationMax.pohyb)}%;"></div>
+                    </div>
                 </div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-between gap-2">
-                    <span class="font-semibold text-stone-600 dark:text-stone-300 flex items-center gap-1.5"><i data-lucide="target" class="w-3.5 h-3.5 text-zinc-500"></i> Streľba</span>
-                    <span class="font-black">${scores.strelba} / 120</span>
+
+                <div class="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl p-4 shadow-sm hover:border-amber-200 dark:hover:border-amber-700 transition-colors">
+                    <div class="flex items-center gap-2 text-amber-600 dark:text-amber-300 mb-3">
+                        <i data-lucide="target" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider">Streľba</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl font-display font-bold text-navy-900 dark:text-white tabular-data">${scores.strelba}</span>
+                        <span class="text-xs text-slate-400 dark:text-zinc-400 font-medium mb-1">/ ${stationMax.strelba}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-zinc-700 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-amber-500 h-full rounded-full" style="width:${progressPercent(scores.strelba, stationMax.strelba)}%;"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
-                    <i data-lucide="clock-3" class="w-4 h-4"></i> Časové údaje
-                </span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700">
+                <p class="text-[10px] uppercase font-semibold text-slate-500 dark:text-zinc-400">Čas na štarte</p>
+                <p class="text-lg font-mono font-semibold text-slate-800 dark:text-zinc-100">${startTime}</p>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
-                    <span class="text-stone-500">Čas na štarte</span>
-                    <span class="font-black font-mono">${startTime}</span>
-                </div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
-                    <span class="text-stone-500">Čas v cieli</span>
-                    <span class="font-black font-mono">${finishTime}</span>
-                </div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
-                    <span class="text-stone-500">Bežecký čas</span>
-                    <span class="font-black font-mono">${runTime}</span>
-                </div>
+            <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700">
+                <p class="text-[10px] uppercase font-semibold text-slate-500 dark:text-zinc-400">Čas v cieli</p>
+                <p class="text-lg font-mono font-semibold text-slate-800 dark:text-zinc-100">${finishTime}</p>
             </div>
-        </div>
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-amber-700 dark:text-amber-400 flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-4 h-4"></i> 1. Písomné testy (všeobecne)
-                </span>
-                <span class="text-xs bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 px-2.5 py-0.5 rounded-full font-bold">Max 320 bodov</span>
-            </div>
-            <div class="grid grid-cols-4 gap-2 text-xs">
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">1. Žiak</p><p class="font-black mt-0.5">${team.testyZiak1 || 0} b.</p></div>
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">2. Žiak</p><p class="font-black mt-0.5">${team.testyZiak2 || 0} b.</p></div>
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">3. Žiak</p><p class="font-black mt-0.5">${team.testyZiak3 || 0} b.</p></div>
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">4. Žiak</p><p class="font-black mt-0.5">${team.testyZiak4 || 0} b.</p></div>
-            </div>
-        </div>
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
-                    <i data-lucide="heart-pulse" class="w-4 h-4"></i> 2. Zdravotnícka príprava
-                </span>
-                <span class="text-xs bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-400 px-2.5 py-0.5 rounded-full font-bold">Max 120 bodov</span>
-            </div>
-            <div class="grid grid-cols-2 gap-3 text-xs">
-                <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center">
-                    <span>Praktické ošetrenie</span>
-                    <span class="font-black">${team.zdravieOsetrenie || 0} / 100 b.</span>
-                </div>
-                <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center">
-                    <span>Volanie na linku 112</span>
-                    <span class="font-black">${team.zdravie112 || 0} / 20 b.</span>
-                </div>
-            </div>
-        </div>
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-orange-600 dark:text-orange-400 flex items-center gap-2">
-                    <i data-lucide="flame" class="w-4 h-4"></i> 3. Hasenie malých požiarov
-                </span>
-                <span class="text-xs bg-orange-100 dark:bg-orange-950 text-orange-800 dark:text-orange-400 px-2.5 py-0.5 rounded-full font-bold">Max 50 bodov</span>
-            </div>
-            <div class="grid grid-cols-2 gap-3 text-xs">
-                <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center">
-                    <span>Džberovka (streľba na terč)</span>
-                    <span class="font-black">${team.hasenieDzberovka || 0} / 30 b.</span>
-                </div>
-                <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center">
-                    <span>Príprava PHP (druh, použitie)</span>
-                    <span class="font-black">${team.hasenieRhp || 0} / 20 b.</span>
-                </div>
-            </div>
-        </div>
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-blue-600 dark:text-blue-400 flex items-center gap-2">
-                    <i data-lucide="shield" class="w-4 h-4"></i> 4. Civilná ochrana
-                </span>
-                <span class="text-xs bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-400 px-2.5 py-0.5 rounded-full font-bold">Max 340 bodov</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Ochranná maska</span><span class="font-black">${team.coMaska || 0} / 80 b.</span></div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Použitie PIO</span><span class="font-black">${team.coPio || 0} / 80 b.</span></div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Evakuačná batožina</span><span class="font-black">${team.coBatozina || 0} / 100 b.</span></div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Varovné signály</span><span class="font-black">${team.coSignaly || 0} / 80 b.</span></div>
-            </div>
-        </div>
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
-                    <i data-lucide="compass" class="w-4 h-4"></i> 5. Pohyb a pobyt v prírode
-                </span>
-                <span class="text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 px-2.5 py-0.5 rounded-full font-bold">Max 50 bodov</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Orientácia & topografia</span><span class="font-black">${team.pohybOrientacia || 0} / 10 b.</span></div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Meranie na mape</span><span class="font-black">${team.pohybMeranie || 0} / 10 b.</span></div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Odhad vzdialenosti</span><span class="font-black">${team.pohybOdhad || 0} / 10 b.</span></div>
-                <div class="p-2.5 bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center"><span>Svetové strany</span><span class="font-black">${team.pohybSvetoveStrany || 0} / 20 b.</span></div>
-            </div>
-        </div>
-        <div class="p-4 bg-stone-50 dark:bg-zinc-800/40 rounded-2xl border border-stone-200/50 dark:border-zinc-800">
-            <div class="flex justify-between items-center mb-2.5">
-                <span class="font-bold text-sm text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
-                    <i data-lucide="target" class="w-4 h-4"></i> 6. Streľba zo vzduchovky
-                </span>
-                <span class="text-xs bg-zinc-100 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-400 px-2.5 py-0.5 rounded-full font-bold">Max 120 bodov</span>
-            </div>
-            <div class="grid grid-cols-4 gap-2 text-xs">
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">1. Žiak</p><p class="font-black mt-0.5">${team.strelbaZiak1 || 0} b.</p></div>
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">2. Žiak</p><p class="font-black mt-0.5">${team.strelbaZiak2 || 0} b.</p></div>
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">3. Žiak</p><p class="font-black mt-0.5">${team.strelbaZiak3 || 0} b.</p></div>
-                <div class="text-center p-2 bg-white dark:bg-zinc-800 rounded-lg"><p class="text-stone-400">4. Žiak</p><p class="font-black mt-0.5">${team.strelbaZiak4 || 0} b.</p></div>
+            <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700">
+                <p class="text-[10px] uppercase font-semibold text-slate-500 dark:text-zinc-400">Zdržný čas</p>
+                <p class="text-lg font-mono font-semibold text-slate-800 dark:text-zinc-100">${delayTime}</p>
             </div>
         </div>
     `;
 
     window.lucide.createIcons();
-    document.getElementById("detailModal").classList.remove("hidden");
+
+    const modal = document.getElementById("detailModal");
+    const modalPanel = modal.querySelector("div.bg-slate-50, div.dark\\:bg-zinc-900");
+    if (!modal || !modalPanel) return;
+
+    modal.classList.remove("hidden", "opacity-0");
+    modal.classList.add("opacity-100", "transition-opacity", "duration-300");
+    modalPanel.classList.remove("scale-95");
+    modalPanel.classList.add("scale-100", "transition-transform", "duration-300");
 }
 
 export function closeModal() {
-    document.getElementById("detailModal").classList.add("hidden");
+    const modal = document.getElementById("detailModal");
+    const modalPanel = modal.querySelector("div.bg-slate-50, div.dark\\:bg-zinc-900");
+    if (!modal || !modalPanel) return;
+
+    modal.classList.remove("opacity-100");
+    modal.classList.add("opacity-0");
+    modalPanel.classList.remove("scale-100");
+    modalPanel.classList.add("scale-95");
+
+    window.setTimeout(() => {
+        modal.classList.add("hidden");
+    }, 300);
 }
 
 export function toggleAccordion(id) {
