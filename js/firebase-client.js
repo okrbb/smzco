@@ -72,7 +72,7 @@ export function initFirebaseLive({
     }
 
     const contestJsonUrl = buildContestJsonUrl(firebaseConfig.databaseURL, contestId);
-    const pollIntervalMs = 60000;
+    const pollIntervalMs = 180000;
     let isPolling = false;
     let isStopped = false;
 
