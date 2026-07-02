@@ -45,47 +45,57 @@
 </head>
 <body class="bg-brand-bgLight text-slate-700 dark:bg-brand-bgDark dark:text-stone-100 min-h-screen flex flex-col antialiased">
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-zinc-900/85 backdrop-blur-lg border-b border-slate-200 dark:border-zinc-800 shadow-sm transition-all">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-3 sm:gap-4 md:grid md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-3">
-            <div class="order-1 flex items-center gap-3 shrink-0">
-                <div class="site-logo p-2.5 rounded-xl border border-slate-200 shadow-sm">
+        <div class="max-w-[1840px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-3 sm:gap-4 xl:grid xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:items-center xl:gap-4">
+            <div class="order-1 flex items-center gap-3 shrink-0 min-w-0">
+                <div class="site-logo shrink-0">
                 </div>
-                <div>
-                    <h1 class="font-display text-xl sm:text-2xl font-bold text-navy-900 dark:text-white tracking-tight flex items-center gap-2">
+                <div class="min-w-0">
+                    <h1 class="font-display text-xl sm:text-2xl font-bold text-navy-900 dark:text-white tracking-tight flex items-center gap-2 whitespace-nowrap">
                         SMZ CO <span id="currentYearBadge" class="text-[10px] uppercase bg-accent text-white font-bold px-2 py-0.5 rounded-md">2026</span>
                     </h1>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-stone-400 font-medium">Súťaž mladých záchranárov civilnej ochrany</p>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-stone-400 font-medium whitespace-nowrap">Súťaž mladých záchranárov civilnej ochrany</p>
                 </div>
             </div>
 
-            <div class="order-3 w-full flex flex-col gap-2 sm:flex-row sm:items-center md:order-2 md:w-full md:min-w-0 md:justify-self-center md:justify-center md:flex-nowrap md:gap-1.5">
-                <div class="relative w-full sm:flex-1 md:flex-none md:w-[170px] lg:w-[200px] xl:w-[230px] min-w-0">
+            <div class="order-3 w-full flex flex-col gap-2 sm:flex-row sm:items-center xl:order-2 xl:w-full xl:min-w-0 xl:justify-self-center xl:justify-center xl:flex-nowrap xl:gap-1">
+                <div class="relative w-full sm:flex-1 xl:flex-none xl:w-[220px] min-w-0 shrink">
                     <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input id="teamSearchInput" type="text" placeholder="Hľadaj družstvo alebo štartové číslo" class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-navy-600/30" />
+                    <input id="teamSearchInput" type="text" placeholder="Hľadaj družstvo alebo št. číslo" class="w-full pl-9 pr-9 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-navy-600/30" />
+                    <button id="clearTeamSearchBtn" type="button" aria-label="Vymazať vyhľadávanie" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full text-slate-400 hover:text-slate-600 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors flex items-center justify-center">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    </button>
                 </div>
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <div class="flex flex-col gap-1 sm:w-[82px] md:w-[80px] lg:w-[86px]">
+                <div class="flex items-center gap-1 min-w-0 shrink">
+                    <div class="flex flex-col gap-1 sm:w-[82px] xl:w-[78px] shrink-0">
                         <div class="flex flex-col gap-1 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/50 px-2.5 py-1.5">
                             <select id="yearSelect" aria-label="Vybrať rok" class="w-full bg-transparent text-xs font-semibold text-slate-800 dark:text-stone-100 focus:outline-none truncate">
                                 <option>Rok</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-1 sm:w-[150px] md:w-[150px] lg:w-[170px] xl:w-[190px] min-w-0">
+                    <div class="flex flex-col gap-1 sm:w-[150px] xl:w-[180px] min-w-0">
                         <div class="flex flex-col gap-1 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/50 px-2.5 py-1.5">
                             <select id="contestSelect" class="w-full bg-transparent text-xs font-semibold text-slate-800 dark:text-stone-100 focus:outline-none truncate">
                                 <option>Načítavam súťaže...</option>
                             </select>
                         </div>
                     </div>
+                    <div class="flex flex-col gap-1 sm:w-[120px] xl:w-[140px] min-w-0">
+                        <div class="flex flex-col gap-1 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/50 px-2.5 py-1.5">
+                            <select id="districtSelect" aria-label="Vybrať okres" class="w-full bg-transparent text-xs font-semibold text-slate-800 dark:text-stone-100 focus:outline-none truncate" disabled>
+                                <option value="all">Všetky súťaže</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-100 dark:bg-zinc-800/70">
+                <div class="flex items-center gap-1 p-1 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-100 dark:bg-zinc-800/70 shrink-0 whitespace-nowrap">
                     <button id="filterAllBtn" data-filter="all" class="px-3 py-1.5 rounded-md text-[11px] font-bold bg-white text-navy-900 dark:bg-zinc-700 dark:text-zinc-100 whitespace-nowrap shadow-sm">Všetky</button>
                     <button id="filterOnTrackBtn" data-filter="onTrack" class="px-3 py-1.5 rounded-md text-[11px] font-semibold text-slate-600 dark:text-zinc-300 whitespace-nowrap">Iba na trati</button>
                     <button id="filterFinishedBtn" data-filter="finished" class="px-3 py-1.5 rounded-md text-[11px] font-semibold text-slate-600 dark:text-zinc-300 whitespace-nowrap">V cieli</button>
                 </div>
             </div>
 
-            <div class="order-2 md:order-3 flex items-center gap-2 sm:gap-3 ml-auto md:ml-0 md:justify-self-end shrink-0 whitespace-nowrap">
+            <div class="order-2 xl:order-3 flex items-center gap-2 sm:gap-3 ml-auto xl:ml-0 xl:justify-self-end shrink-0 whitespace-nowrap">
                 <div id="liveStatusBadge" class="flex items-center gap-2 px-3 py-1.5 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 rounded-lg transition-colors">
                     <span id="liveStatusDot" class="w-2.5 h-2.5 bg-red-600 rounded-full live-dot"></span>
                     <span id="liveStatusText" class="text-xs font-black text-red-600 dark:text-red-400 tracking-wider">LIVE REBRÍČEK</span>

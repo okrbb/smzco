@@ -4,16 +4,11 @@ import {
     calculateTotalPoints,
     formatClockTime,
     getCompletedStationsCount,
+    getTeamDistrict,
     getPureTimeFormatted,
     getScoreSnapshot,
     getTeamStatusKey
 } from "./scoring.js";
-
-function getExternalRank(team) {
-    const candidates = [team.rank, team.poradie, team.rankPosition, team.poradieAktualne];
-    const rank = candidates.find((value) => typeof value === "number" && Number.isFinite(value));
-    return rank;
-}
 
 function getExternalRunTimeMillis(team) {
     const candidates = [team.runTimeMillis, team.runningTimeMillis, team.bezeckyCasMillis, team.bezeciCasMillis, team.pureTimeMillis];
@@ -21,14 +16,8 @@ function getExternalRunTimeMillis(team) {
     return value;
 }
 
-function sortTeams(teams, limitMin) {
+export function sortTeams(teams, limitMin) {
     return [...teams].sort((a, b) => {
-        const rankA = getExternalRank(a);
-        const rankB = getExternalRank(b);
-        if (rankA !== undefined && rankB !== undefined && rankA !== rankB) {
-            return rankA - rankB;
-        }
-
         const totalA = calculateTotalPoints(a, limitMin);
         const totalB = calculateTotalPoints(b, limitMin);
         if (totalA !== totalB) return totalB - totalA;
@@ -138,11 +127,16 @@ function normalizeForSearch(value) {
         .trim();
 }
 
-function applyTeamFilters(teams, filters) {
+export function applyTeamFilters(teams, filters) {
     const query = normalizeForSearch(filters.query);
     const activeStatus = filters.status;
+    const activeDistrict = filters.district || "all";
 
     return teams.filter((team) => {
+        if (activeDistrict !== "all" && getTeamDistrict(team) !== activeDistrict) {
+            return false;
+        }
+
         if (activeStatus !== "all" && getTeamStatusKey(team) !== activeStatus) {
             return false;
         }
@@ -153,6 +147,13 @@ function applyTeamFilters(teams, filters) {
         const startNumMatch = String(team.startNum || "").includes(query);
         return nameMatch || startNumMatch;
     });
+}
+
+function getTeamDistrictBadge(team) {
+    const district = getTeamDistrict(team);
+    if (!district) return "";
+
+    return `<span class="inline-flex items-center rounded-md bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-zinc-300">${district}</span>`;
 }
 
 function getStationProgressHtml(team) {
@@ -177,6 +178,7 @@ function getRenderSignature(team, index, scores) {
     return [
         index,
         team.name,
+        getTeamDistrict(team) || "",
         team.status || "",
         getCompletedStationsCount(team),
         scores.testy,
@@ -198,7 +200,10 @@ function buildDesktopRowHtml(team, index, prev, scores, signature) {
             <td class="py-3.5 px-6 text-center">${getRankDisplay(index)}</td>
             <td class="py-3.5 px-3 text-center text-slate-400 dark:text-zinc-500 font-semibold">#${team.startNum}</td>
             <td class="py-3.5 px-6">
-                <p class="font-display font-bold text-navy-900 dark:text-white text-[15px] leading-tight">${team.name}</p>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <p class="font-display font-bold text-navy-900 dark:text-white text-[15px] leading-tight">${team.name}</p>
+                    ${getTeamDistrictBadge(team)}
+                </div>
                 ${getStationProgressHtml(team)}
             </td>
             <td class="py-3.5 px-4 text-center">${getStatusChip(team)}</td>
@@ -210,7 +215,7 @@ function buildDesktopRowHtml(team, index, prev, scores, signature) {
             <td class="py-3.5 px-4 text-center font-semibold text-slate-700 dark:text-zinc-200 ${checkPulse(scores.strelba, prev.strelba)}">${scores.strelba}</td>
             <td class="py-3.5 px-4 text-center font-mono text-sm text-slate-700 dark:text-zinc-200">${getPureTimeFormatted(team)}</td>
             <td class="py-3.5 px-4 text-center text-red-500 font-semibold ${checkPulse(scores.penalty, prev.penalty)}">${scores.penalty > 0 ? `-${scores.penalty} b.` : "0"}</td>
-            <td class="py-3.5 px-6 text-center font-display font-bold bg-blue-50/70 dark:bg-zinc-800/20 group-hover:bg-blue-100/70 dark:group-hover:bg-zinc-700/40 text-lg text-navy-900 dark:text-amber-300 ${checkPulse(scores.total, prev.total)}">${scores.total} b.</td>
+            <td class="py-3.5 px-6 text-center font-display font-bold bg-blue-50/70 dark:bg-zinc-800/20 group-hover:bg-blue-100/70 dark:group-hover:bg-zinc-700/40 text-lg text-navy-900 dark:text-amber-300 ${checkPulse(scores.total, prev.total)}">${scores.total}</td>
         </tr>
     `;
 }
@@ -225,11 +230,14 @@ function buildMobileCardHtml(team, index, scores, signature) {
                     </span>
                     <div>
                         <h4 class="font-bold text-stone-800 dark:text-white leading-tight text-base">${team.name}</h4>
-                        <span class="text-xs font-mono text-stone-400">Čas: ${getPureTimeFormatted(team)}</span>
+                        <div class="flex flex-wrap items-center gap-2 mt-0.5">
+                            <span class="text-xs font-mono text-stone-400">Čas: ${getPureTimeFormatted(team)}</span>
+                            ${getTeamDistrictBadge(team)}
+                        </div>
                     </div>
                 </div>
                 <div class="text-right">
-                    <span class="text-lg font-black text-amber-600 dark:text-amber-400 block">${scores.total} b.</span>
+                    <span class="text-lg font-black text-amber-600 dark:text-amber-400 block">${scores.total}</span>
                     <span class="text-[10px] text-blue-700 dark:text-blue-300 block uppercase font-bold">Zobraziť</span>
                 </div>
             </div>
@@ -362,6 +370,10 @@ export function updateFilterButtonsUI(activeStatus) {
 export function renderLeaderboard(state) {
     const sortedAll = sortTeams(state.teams, state.limitMin);
     const sorted = applyTeamFilters(sortedAll, state.filters);
+    const districtScopedTeams = state.filters.district && state.filters.district !== "all"
+        ? state.teams.filter((team) => getTeamDistrict(team) === state.filters.district)
+        : state.teams;
+    const districtSorted = sortTeams(districtScopedTeams, state.limitMin);
     const tbody = document.getElementById("leaderboardBody");
     const mobileContainer = document.getElementById("mobileContainer");
     const emptyState = document.getElementById("emptyState");
@@ -382,10 +394,10 @@ export function renderLeaderboard(state) {
     const mobileFirstRects = orderUnchanged ? new Map() : captureItemRects("#mobileContainer", ".team-card");
 
     document.getElementById("statLimit").innerText = `${state.limitMin} minút`;
-    document.getElementById("statTotalTeams").innerText = state.teams.length;
-    document.getElementById("statOnTrack").innerText = state.teams.filter((team) => team.status === "Na trati" || team.status === "ON_TRACK").length;
-    document.getElementById("statFinished").innerText = state.teams.filter((team) => team.status === "V cieli" || team.status === "FINISHED").length;
-    const topLeader = sortedAll[0];
+    document.getElementById("statTotalTeams").innerText = districtScopedTeams.length;
+    document.getElementById("statOnTrack").innerText = districtScopedTeams.filter((team) => team.status === "Na trati" || team.status === "ON_TRACK").length;
+    document.getElementById("statFinished").innerText = districtScopedTeams.filter((team) => team.status === "V cieli" || team.status === "FINISHED").length;
+    const topLeader = districtSorted[0];
     document.getElementById("statLeader").innerText = (topLeader && calculateTotalPoints(topLeader, state.limitMin) > 0) ? topLeader.name : "-";
 
     if (sorted.length === 0) {
@@ -399,7 +411,7 @@ export function renderLeaderboard(state) {
             emptyStateHint.innerText = "Skontrolujte pripojenie k databáze.";
         } else {
             emptyStateTitle.innerText = "Filter nenašiel žiadny tím";
-            emptyStateHint.innerText = "Skúste iný názov, štartové číslo alebo stav tímu.";
+            emptyStateHint.innerText = "Skúste iný názov, štartové číslo, okres alebo stav tímu.";
         }
 
         state.renderedOrder = [];
@@ -605,6 +617,10 @@ export function showTeamDetail(startNum, state) {
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700">
+                <p class="text-[10px] uppercase font-semibold text-slate-500 dark:text-zinc-400">Okres</p>
+                <p class="text-lg font-semibold text-slate-800 dark:text-zinc-100">${getTeamDistrict(team) || "-"}</p>
+            </div>
             <div class="p-3 bg-white dark:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700">
                 <p class="text-[10px] uppercase font-semibold text-slate-500 dark:text-zinc-400">Čas na štarte</p>
                 <p class="text-lg font-mono font-semibold text-slate-800 dark:text-zinc-100">${startTime}</p>

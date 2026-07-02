@@ -71,6 +71,11 @@ export function calculateTotalPoints(team, limitMin) {
     return calculateAllStationsPoints(team) - calculatePenalty(team, limitMin);
 }
 
+export function getTeamDistrict(team) {
+    const district = getFirstString(team, ["okres", "district"]);
+    return district || undefined;
+}
+
 export function getPureTimeFormatted(team) {
     const precomputedTime = getFirstString(team, ["runTime", "runningTime", "bezeckyCas", "bezeciCas", "pureTimeFormatted"]);
     if (precomputedTime) return precomputedTime;

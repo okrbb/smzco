@@ -1,4 +1,5 @@
 import { initFirebaseLive } from "./firebase-client.js";
+import { getTeamDistrict } from "./scoring.js";
 import {
     closeModal,
     initTheme,
@@ -110,7 +111,8 @@ const state = {
     },
     filters: {
         query: "",
-        status: "all"
+        status: "all",
+        district: "all"
     }
 };
 
@@ -138,6 +140,46 @@ function scheduleLeaderboardRender() {
 
 function updateContestSummaryUI() {
     return;
+}
+
+function getContestDistricts() {
+    const districts = new Map();
+
+    state.teams.forEach((team) => {
+        const district = getTeamDistrict(team);
+        if (district) {
+            districts.set(district.toLocaleLowerCase("sk"), district);
+        }
+    });
+
+    return [...districts.values()].sort((a, b) => a.localeCompare(b, "sk"));
+}
+
+function renderDistrictSelect() {
+    const select = document.getElementById("districtSelect");
+    if (!select) return;
+
+    const districts = getContestDistricts();
+    const hasDistricts = districts.length > 0;
+
+    if (state.filters.district !== "all" && !districts.includes(state.filters.district)) {
+        state.filters.district = "all";
+    }
+
+    select.innerHTML = [
+        '<option value="all">Všetky súťaže</option>',
+        ...districts.map((district) => `<option value="${district}"${district === state.filters.district ? " selected" : ""}>${district}</option>`)
+    ].join("");
+    select.disabled = !hasDistricts;
+    select.value = state.filters.district;
+
+    if (!select.dataset.bound) {
+        select.addEventListener("change", (event) => {
+            state.filters.district = event.target.value || "all";
+            scheduleLeaderboardRender();
+        });
+        select.dataset.bound = "true";
+    }
 }
 
 function renderYearSelect() {
@@ -276,17 +318,40 @@ function switchContest(nextContestId) {
     state.renderedOrder = [];
     state.hasReceivedTeams = false;
     state.hasReceivedTeamsPayload = false;
+    state.filters.district = "all";
     setContestState(nextContestId);
     setConnectionStatus("connecting");
+    renderDistrictSelect();
     scheduleLeaderboardRender();
     initFirebase();
 }
 
 function initFilters() {
     const searchInput = document.getElementById("teamSearchInput");
+    const clearSearchButton = document.getElementById("clearTeamSearchBtn");
+
+    const syncClearSearchButton = (value) => {
+        if (!clearSearchButton) return;
+        const hasQuery = String(value || "").trim().length > 0;
+        clearSearchButton.classList.toggle("hidden", !hasQuery);
+    };
+
     if (searchInput) {
         searchInput.addEventListener("input", (event) => {
             state.filters.query = event.target.value || "";
+            syncClearSearchButton(state.filters.query);
+            scheduleLeaderboardRender();
+        });
+
+        syncClearSearchButton(searchInput.value);
+    }
+
+    if (searchInput && clearSearchButton) {
+        clearSearchButton.addEventListener("click", () => {
+            searchInput.value = "";
+            state.filters.query = "";
+            syncClearSearchButton("");
+            searchInput.focus();
             scheduleLeaderboardRender();
         });
     }
@@ -314,6 +379,7 @@ function initFirebase() {
             state.teams = teams;
             state.hasReceivedTeams = true;
             state.hasReceivedTeamsPayload = true;
+            renderDistrictSelect();
             setConnectionStatus("connected");
             scheduleLeaderboardRender();
         },
@@ -401,6 +467,7 @@ window.addEventListener("load", () => {
     window.lucide.createIcons();
     setConnectionStatus("connecting");
     scheduleLeaderboardRender();
+    renderDistrictSelect();
     loadContestCatalog().finally(() => {
         initFirebase();
     });
